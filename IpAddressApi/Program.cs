@@ -20,7 +20,6 @@ namespace IpAddressApi
 
             var app = serviceProvider.GetRequiredService<IpAddressSearcApplication>();
             await app.RunAsync();
-
         }
 
         private static ServiceProvider BuildServiceProvider(
