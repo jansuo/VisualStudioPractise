@@ -2,7 +2,6 @@
 using IpAddressApi.Api;
 using IpAddressApi.Output;
 using IpAddressApi.Services;
-using IpAddressApi.Validators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;

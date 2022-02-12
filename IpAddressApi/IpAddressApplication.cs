@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using OneOf;
+using IpAddressApi.Errors;
 
 namespace IpAddressApi
 {
@@ -29,22 +30,27 @@ namespace IpAddressApi
         public async Task RunAsync()
         {
             var request = new IpAddressRequest("84.251.7.29"); // todo parametrina
-   
+
             var result = await _ipAddressSearchService.SearchByIpAddressAsync(request);
+            HandleResult(result);
+        }
+
+        private void HandleResult(OneOf<IpAddressResult, IpAddressValidationError> result)
+        {
             result.Switch(
-            searchResult =>
-            {
-                var resultText = JsonSerializer.Serialize(searchResult, new JsonSerializerOptions
+                searchResult =>
                 {
-                    WriteIndented = true
+                    var resultText = JsonSerializer.Serialize(searchResult, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+                    _outputWriter.WriteLine(resultText);
+                },
+                error =>
+                {
+                    var formattedErrors = String.Join(", ", error.Messages);
+                    _outputWriter.WriteLine(formattedErrors);
                 });
-                 _outputWriter.WriteLine(resultText);
-            }, 
-            error =>
-            {
-                var formattedErrors = String.Join(", ", error.Messages);
-                _outputWriter.WriteLine(formattedErrors);
-            }); 
         }
     }
 }
